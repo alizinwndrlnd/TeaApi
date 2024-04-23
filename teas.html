@@ -18,28 +18,23 @@
                 <h1 class="m-auto">TEÁK</h1>
             </div>
             <div class="col-md-6 text-end">
-                <button class="btn btn-primary my-3" type="button" id="new">Új termék</button>
+                <button class="btn btn-primary my-2" type="button" id="newBtn">Új termék</button>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                
-              
-                
                 <div>
                     <div class="my-3">
-                        
+
                     </div>
                 </div>
                 <div id="teas">
 
                 </div>
-              
 
                 <form action="" id="form">
                     <div><label for="name">Megnevezés</label></div>
                     <div><input type="text" name="name" id="name" value="Tea" minlength="1" maxlength="90"></div>
-                    
 
                     <div class="my-3">
                         <label for="brand_id">Gyártó</label>
@@ -71,7 +66,7 @@
                     <div class="my-3">
                         <label for="qty">Mennyiség</label>
                         <input type="number" name="qty" id="qty" value="1" min="1" max="3000">
-                        
+
                     </div>
 
                     <div class="my-3">
@@ -96,15 +91,80 @@
                 </form>
 
 
-
-
-
-
             </div>
         </div>
     </div>
 
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1"  aria-labelledby="updateModalLabel" aria-hidden="true">
+        <form action="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Módosítás</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div><label for="modalName">Megnevezés</label></div>
+                    <div><input type="text" name="modalName" id="modalName" value="Tea" minlength="1" maxlength="90"></div>
+
+                    <div class="my-3">
+                        <label for="modalBrand">Gyártó</label>
+                        <select name="modalBrand" id="modalBrand">
+                            <option value="1">Lipton</option>
+                            <option value="2">Tetley</option>
+                            <option value="3" selected>Twinnings</option>
+                        </select>
+                    </div>
+
+                    <div class="my-3">
+                        <label for="modalRange">Fajta</label>
+                        <select name="modalRange" id="modalRange">
+                            <option value="black">Fekete Tea</option>
+                            <option value="fruit" selected>Gyümölcs Tea</option>
+                            <option value="green">Zöld Tea</option>
+                        </select>
+                    </div>
+
+                    <div class="my-3">
+                        <label for="modalFormat">Kiszerelés</label>
+                        <select name="modalFormat" id="modalFormat">
+                            <option value="db">darab</option>
+                            <option value="l">liter</option>
+                            <option value="ml" selected>mililiter</option>
+                        </select>
+                    </div>
+
+                    <div class="my-3">
+                        <label for="modalQty">Mennyiség</label>
+                        <input type="number" name="modalQty" id="modalQty" value="1" min="1" max="3000">
+
+                    </div>
+
+                    <div class="my-3">
+                        <label for="modalUnit">Egység</label>
+                        <select name="modalUnit" id="modalUnit">
+                            <option value="tea bag">Filteres</option>
+                            <option value="can">Fémdobozos</option>
+                            <option value="bottle" selected>Palack</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégse</button>
+                    <button type="button" class="btn btn-primary">Módosítás</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
     <script src="./js/teas.js" type="">
 </body>
 

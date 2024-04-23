@@ -1,7 +1,16 @@
 "use strict"
 const baseUrl = "http://172.19.0.12:8761/api"
 
-document.getElementById("form").style.visibility = "hidden"; 
+document.getElementById("form").style.visibility = "hidden";
+const updateForm = document.querySelector("#updateModal form")
+const updateModal = new bootstrap.Modal('#updateModal')
+
+const modalName = document.querySelector("#modalName")
+const modalBrand = document.querySelector("#modalBrand")
+const modalRange = document.querySelector("#modalRange")
+const modalFormat = document.querySelector("#modalFormat")
+const modalQty = document.querySelector("#modalQty")
+const modalUnit = document.querySelector("#modalUnit")
 
 displayTable();
 
@@ -10,7 +19,7 @@ function generateTable(teas) {
     table.classList.add("table", "table-striped");
     const thead = document.createElement("thead");
     const tr = document.createElement("tr");
-    const titles = ["Megnevezés", "Gyártó", "Fajta", "Kiszerelés", "Mennyiség", "Ár"];
+    const titles = ["Megnevezés", "Gyártó", "Fajta", "Kiszerelés", "Mennyiség", "Ár", "Admin"];
 
     for (let title of titles) {
         let th = document.createElement("th");
@@ -32,7 +41,7 @@ function generateTable(teas) {
 }
 
 function displayTable() {
-    
+
     fetch(baseUrl + "/teas")
         .then(response => {
             if (!response.ok) {
@@ -102,19 +111,66 @@ function generateRow(tea) {
         tea.range,
         tea.format,
         `${tea.qty} ${tea.unit}`,
-        `${tea.price} Ft`
+        `${tea.price} Ft`,
+        ""
+        
     ]
+
+    //törlés gomb
+    const btnTorol = document.createElement("button")
+    btnTorol.setAttribute("type", "button")
+    btnTorol.classList.add("btn", "btn-danger", "mx-3")
+    btnTorol.append(document.createTextNode("Törlés"))
+    btnTorol.addEventListener("click", (evt) => {
+        evt.preventDefault()
+
+        fetch(`${baseUrl}/teas/${tea['id']}`, {
+            "method": "delete",
+            "headers": {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+    })
+
+    //módosítás gomb
+    const updateBtn = document.createElement("button")
+    updateBtn.setAttribute("type", "button")
+    updateBtn.classList.add("btn", "btn-warning", "my-3")
+    updateBtn.append(document.createTextNode("Módosítás"))
+    updateBtn.addEventListener("click", (evt) => {
+        evt.preventDefault()
+        modalName.value = tea["name"]
+        modalBrand[tea["brand_id"]].selected = true //tea["brand_id"] //
+        modalFormat.value = tea["format"]
+        modalQty.value = tea["qty"]                  
+        modalRange.value = tea["range"]
+        modalUnit.value = tea["unit"]
+       
+
+        console.log(updateModal)
+
+        updateForm.dataset.id = tea["id"]
+
+        updateModal.show()
+    })
+
 
 
 
     for (const content of contents) {
         let td = document.createElement("td")
         td.innerText = content
+        td.append(btnTorol)
+        td.append(updateBtn)
         tr.appendChild(td)
     }
+
     return tr
 
 }
+
+
 
 function sendNewTea(evt) {
     evt.preventDefault()
@@ -127,17 +183,17 @@ function sendNewTea(evt) {
     let ar = document.getElementById("price")
     let egyseg = document.getElementById("unit")
 
-    let newTea = 
-        {
-            "name": megnevezes.value,
-            "brand_id": gyarto.value,
-            "range": fajta.value,
-            "format": kiszereles.value,
-            "qty": mennyiseg.value,
-            "unit": egyseg.value,
-            "price": ar.value,
-        }
-console.log(newTea)
+    let newTea =
+    {
+        "name": megnevezes.value,
+        "brand_id": gyarto.value,
+        "range": fajta.value,
+        "format": kiszereles.value,
+        "qty": mennyiseg.value,
+        "unit": egyseg.value,
+        "price": ar.value,
+    }
+    console.log(newTea)
     fetch(baseUrl + "/teas", {
         method: 'POST',
         body: JSON.stringify(newTea),
@@ -146,14 +202,48 @@ console.log(newTea)
             'accept': 'application/json'
         }
     })
-       
 }
 
 
-let ujtermek = document.getElementById("new")
-ujtermek.addEventListener("click", document.getElementById("form").style.visibility = "visible" )
+
+
+let ujtermek = document.getElementById("newBtn")
+ujtermek.addEventListener("click", () => {
+    document.getElementById("form").style.visibility = "visible"
+})
 
 const xsubmit = document.querySelector("form")
+const mentGomb = document.getElementById("ment")
+mentGomb.classList.add("btn", "btn-success")
 console.log(xsubmit)
 xsubmit.addEventListener("submit", sendNewTea)
 
+
+
+updateForm.addEventListener("submit",(evt) => {
+    evt.preventDefault()
+
+    const id = updateForm.dataset.id
+
+    const fd = new FormData(updateForm)
+    
+    fetch(`${baseUrl}/tea/${id}`, {
+        "method" : "put",
+        "headers" : {
+            "Content-Type" : "application/json",
+            "Accept" : "application/json"
+        },
+        "body" : JSON.stringify(Object.fromEntries(fd.entries()))
+    })
+    .then(response => response.json())
+    .then(tea => {
+        console.log(tea)
+
+        const row = document.querySelector(`[data-id="${tea.id}"]`)
+        document.querySelector(`[data-id="${tea.id}"] td:nth-of-type(2)`).innerText = tea.name
+        document.querySelector(`[data-id="${tea.id}"] td:nth-of-type(3)`).innerText = tea.brand_id
+
+        updateModal.hide()
+    })
+    .catch(err => console.log(err))
+})
